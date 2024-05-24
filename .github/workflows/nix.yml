@@ -6,15 +6,26 @@ on:
     paths: ["mix.lock"]
 
 jobs:
+  uses:
+    - actions/checkout@v4
+    - DeterminateSystems/nix-installer-action@main
+    - DeterminateSystems/magic-nix-cache-action@main
+  nix_hash_check:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Check nix hash
+    steps:
+      - name: Build flake (check hashes)
+        env:
+          NIX_CONFIG: experimental-features = nix-command flakes
+        run: nix build --no-link
+
   auto-update-nix-hash:
     permissions:
       contents: write
     runs-on: ubuntu-latest
     name: Auto update Nix hash
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
       - run: |
           nix run .#update-hash | tee nix/hash
           git config user.email ""

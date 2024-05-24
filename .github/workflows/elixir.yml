@@ -21,9 +21,6 @@ env:
   DEFAULT_ELIXIR: 1.14.3-otp-25
   DEFAULT_OTP: 25.3.2.4
 
-permissions:
-  contents: read
-
 jobs:
   static_analysis:
     runs-on: ubuntu-latest
